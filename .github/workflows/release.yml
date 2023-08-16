@@ -20,22 +20,20 @@ jobs:
 
             - name: Install deps
               run: npm install
-            
+
             - name: Build package
               run: npm build
 
             - name: Get tag
+              uses: martinbeentjes/npm-get-version-action@master
               id: get_tag
-              run: |
-                echo "current_version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-                shell: bash
 
             - name: Get Changelog Entry
               id: get_changelog
               uses: mindsers/changelog-reader-action@v2
               with:
                 validation_depth: 10
-                version: ${{ steps.get_tag.outputs.current_version }}
+                version: ${{ steps.get_tag.outputs.current-version }}
 
             - name: Create Release
               uses: ncipollo/release-action@v1
