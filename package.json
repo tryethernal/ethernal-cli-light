@@ -19,7 +19,8 @@
     "url": "git+https://github.com/tryethernal/ethernal-cli-light.git"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "ethernal",

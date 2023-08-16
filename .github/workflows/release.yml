@@ -22,7 +22,7 @@ jobs:
               run: npm ci
 
             - name: Build package
-              run: npm build
+              run: npm run build
 
             - name: Get tag
               uses: martinbeentjes/npm-get-version-action@master
