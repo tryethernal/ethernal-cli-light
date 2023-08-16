@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts",
     "preversion": "npm run lint",
     "version": "git add -A src",
-    "postversion": "git push && git push --tags",
+    "postversion": "git push && git push --tags"
   },
   "bin": {
     "ethernal-light": "lib/index.js"
