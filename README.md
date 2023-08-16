@@ -1,6 +1,6 @@
 # Ethernal CLI Light
 
-This is a simplified version of the [Ethernal CLI](https://github.com/tryethernal/cli).
+This is a simplified version of the [Ethernal CLI](https://github.com/tryethernal/ethernal-cli).
 The goal is to have a smaller & less memory consuming package that directly connects to the queuing Redis backend, without going through the API.
 
 It is meant to be launched through the Ethernal PM2 server.
