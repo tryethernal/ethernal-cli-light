@@ -13,10 +13,10 @@ jobs:
               with:
                 fetch-depth: 0
 
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v3
               with:
-                node-version: 12
-                registry-url: https://registry.npmjs.org/
+                node-version: '16.x'
+                registry-url: https://registry.npmjs.org
 
             - name: Install deps
               run: npm ci
@@ -45,4 +45,4 @@ jobs:
             - name: Publish to NPM
               run: npm publish
               env:
-                NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+                NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
