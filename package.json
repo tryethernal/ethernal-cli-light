@@ -1,6 +1,6 @@
 {
-  "name": "Ethernal CLI Light",
-  "version": "1.0.5",
+  "name": "ethernal-light",
+  "version": "0.0.1",
   "description": "Light version of Ethernal CLI that connects directly to the queuing backend",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,6 +16,9 @@
     "check-updates": "npx npm-check-updates",
     "check-updates:minor": "npx npm-check-updates --target minor",
     "check-updates:patch": "npx npm-check-updates --target patch"
+  },
+  "bin": {
+    "ethernal-light": "lib/index.js"
   },
   "repository": {
     "type": "git",
