@@ -41,16 +41,7 @@ const getProvider = (_rpcServer: string) => {
     try {
         const rpcServer = new URL(_rpcServer);
         const provider = { JsonRpcProvider, WebSocketProvider }[rpcServer.protocol == 'ws:' || rpcServer.protocol == 'wss:' ? 'WebSocketProvider' : 'JsonRpcProvider'];
-
-        let authenticatedUrl: any = _rpcServer;
-        if (rpcServer.username.length || rpcServer.password.length)
-            authenticatedUrl = {
-                url: rpcServer.origin,
-                user: rpcServer.username,
-                password: rpcServer.password
-            };
-
-        return new provider(authenticatedUrl);
+        return new provider(_rpcServer);
     } catch (error) {
         console.log(error);
         process.exit(1);
