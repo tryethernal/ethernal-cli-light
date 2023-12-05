@@ -28,7 +28,6 @@ const defaultJobOptions = {
         age: 4 * 60
     },
     timeout: 30000,
-    priority: 1,
     backoff: {
         type: 'exponential',
         delay: 1000
@@ -82,7 +81,7 @@ const main = async () => {
             workspace: workspace.name,
             blockNumber,
             source: 'cli-light'
-        });
+        }, { priority: 1 });
     });
 };
 
