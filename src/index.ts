@@ -74,14 +74,14 @@ const main = async () => {
     provider.on('block', async (blockNumber, error) => {
         if (error && error.reason)
             return console.log(`Error while receiving data: ${error.reason}`);
-    
-        console.log(`Syncing block #${blockNumber}...`);
+
         await queue.add(`blockSync-${workspaceId}-${blockNumber}`, {
             userId: workspace.user.firebaseUserId,
             workspace: workspace.name,
             blockNumber,
             source: 'cli-light'
         }, { priority: 1 });
+        console.log(`Synced block #${blockNumber}...`);
     });
 };
 
