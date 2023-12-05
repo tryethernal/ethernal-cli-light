@@ -28,7 +28,7 @@ const defaultJobOptions = {
         age: 4 * 60
     },
     timeout: 30000,
-    priorit: 1,
+    priority: 1,
     backoff: {
         type: 'exponential',
         delay: 1000
