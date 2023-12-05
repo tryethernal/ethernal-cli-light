@@ -28,6 +28,7 @@ const defaultJobOptions = {
         age: 4 * 60
     },
     timeout: 30000,
+    priorit: 1,
     backoff: {
         type: 'exponential',
         delay: 1000
@@ -49,19 +50,19 @@ const getProvider = (_rpcServer: string) => {
 };
 
 const main = async () => {
-    const { data: workspace } = await axios.get(`${apiHost}/api/workspaces/${workspaceId}`, { params: { secret }});
+    // const { data: workspace } = await axios.get(`${apiHost}/api/workspaces/${workspaceId}`, { params: { secret }});
     
-    if (!workspace) {
-        console.log(`Couldn't find workspace with id ${workspaceId}.`);
-        process.exit(1);
-    }
+    // if (!workspace) {
+    //     console.log(`Couldn't find workspace with id ${workspaceId}.`);
+    //     process.exit(1);
+    // }
 
-    if (!workspace.user) {
-        console.log(`This workspace doesn't seem to have an user (workspace id: "${workspaceId}").`);
-        process.exit(1);
-    }
+    // if (!workspace.user) {
+    //     console.log(`This workspace doesn't seem to have an user (workspace id: "${workspaceId}").`);
+    //     process.exit(1);
+    // }
 
-    const rpcServer = workspace.rpcServer;
+    const rpcServer = 'https://host-76-74-28-227.contentfabric.io/eth/';
     const provider = getProvider(rpcServer);
 
     provider.on('error', async error => {
@@ -76,12 +77,12 @@ const main = async () => {
             return console.log(`Error while receiving data: ${error.reason}`);
     
         console.log(`Syncing block #${blockNumber}...`);
-        await queue.add(`blockSync-${workspaceId}-${blockNumber}`, {
-            userId: workspace.user.firebaseUserId,
-            workspace: workspace.name,
-            blockNumber,
-            source: 'cli-light'
-        });
+        // await queue.add(`blockSync-${workspaceId}-${blockNumber}`, {
+        //     userId: workspace.user.firebaseUserId,
+        //     workspace: workspace.name,
+        //     blockNumber,
+        //     source: 'cli-light'
+        // });
     });
 };
 
