@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import axios from 'axios';
-import { JsonRpcProvider, WebSocketProvider } from 'ethers';
+import { defineChain, createPublicClient, http } from 'viem';
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
 
@@ -40,8 +40,7 @@ const queue = new Queue('blockSync', { connection, defaultJobOptions });
 const getProvider = (_rpcServer: string) => {
     try {
         const rpcServer = new URL(_rpcServer);
-        const provider = { JsonRpcProvider, WebSocketProvider }[rpcServer.protocol == 'ws:' || rpcServer.protocol == 'wss:' ? 'WebSocketProvider' : 'JsonRpcProvider'];
-        return new provider(_rpcServer);
+        return rpcServer.protocol == 'ws:' || rpcServer.protocol == 'wss:' ? { http: [], webSocket: [_rpcServer] } : { http: [_rpcServer], webSocket: [] };
     } catch (error) {
         console.log(error);
         process.exit(1);
@@ -61,27 +60,45 @@ const main = async () => {
         process.exit(1);
     }
 
-    const rpcServer = workspace.rpcServer;
-    const provider = getProvider(rpcServer);
-
-    provider.on('error', async error => {
-        if (error && error.reason)
-            console.log(`Could not connect to ${rpcServer}. Error: ${error.reason}. Retrying...`);
-        else
-            console.log(`Could not connect to ${rpcServer}. Retrying...`);
+    const chain = defineChain({
+        id: workspace.networkId,
+        name: workspace.name,
+        network: workspace.name,
+        nativeCurrency: {
+            decimals: 18,
+            name: 'Ether',
+            symbol: 'ETH'
+        },
+        rpcUrls: {
+            default: getProvider(workspace.rpcServer),
+            public: getProvider(workspace.rpcServer)
+        }
     });
 
-    provider.on('block', async (blockNumber, error) => {
-        if (error && error.reason)
-            return console.log(`Error while receiving data: ${error.reason}`);
+    const client = createPublicClient({
+        chain,
+        transport: http()
+    });
 
-        await queue.add(`blockSync-${workspaceId}-${blockNumber}`, {
-            userId: workspace.user.firebaseUserId,
-            workspace: workspace.name,
-            blockNumber,
-            source: 'cli-light'
-        }, { priority: 1 });
-        console.log(`Synced block #${blockNumber}...`);
+    client.watchBlocks({
+        onBlock: async block => {
+            if (!block)
+                return console.log(`Error while receiving block.`);
+            await queue.add(`blockSync-${workspaceId}-${block.number}`, {
+                userId: workspace.user.firebaseUserId,
+                workspace: workspace.name,
+                blockNumber: block.number.toString(),
+                source: 'cli-light'
+            }, { priority: 1 });
+            console.log(`Synced block #${block.number}...`);
+        },
+
+        onError: error => {
+            if (error && error.message)
+                console.log(`Could not connect to ${workspace.rpcServer}. Error: ${error.message}. Retrying...`);
+            else
+                console.log(`Could not connect to ${workspace.rpcServer}. Retrying...`);
+        }
     });
 };
 
