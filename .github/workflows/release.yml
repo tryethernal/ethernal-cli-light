@@ -15,14 +15,14 @@ jobs:
 
             - uses: actions/setup-node@v3
               with:
-                node-version: '16.x'
+                node-version: '18.x'
                 registry-url: https://registry.npmjs.org
 
             - name: Install deps
-              run: npm ci
+              run: yarn install --frozen-lockfile
 
             - name: Build package
-              run: npm run build
+              run: yarn build
 
             - name: Get tag
               uses: martinbeentjes/npm-get-version-action@master
