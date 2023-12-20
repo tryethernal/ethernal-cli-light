@@ -87,7 +87,7 @@ const main = async () => {
             await queue.add(`blockSync-${workspaceId}-${block.number}`, {
                 userId: workspace.user.firebaseUserId,
                 workspace: workspace.name,
-                blockNumber: block.number.toString(),
+                blockNumber: parseInt(block.number.toString()),
                 source: 'cli-light'
             }, { priority: 1 });
             console.log(`Synced block #${block.number}...`);
