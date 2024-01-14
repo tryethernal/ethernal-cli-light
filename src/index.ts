@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import axios from 'axios';
-import { defineChain, createPublicClient, http } from 'viem';
+import { defineChain, createPublicClient, http, webSocket } from 'viem';
 import { Queue } from 'bullmq';
 import Redis from 'ioredis';
 
@@ -75,10 +75,9 @@ const main = async () => {
         }
     });
 
-    const client = createPublicClient({
-        chain,
-        transport: http()
-    });
+    const transport = workspace.rpcServer.startsWith('ws') ? webSocket() : http();
+
+    const client = createPublicClient({ chain, transport });
 
     client.watchBlocks({
         emitOnBegin: false,
