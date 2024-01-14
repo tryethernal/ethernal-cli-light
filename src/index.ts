@@ -80,6 +80,7 @@ const main = async () => {
     const client = createPublicClient({ chain, transport });
 
     client.watchBlocks({
+        emitMissed: true,
         emitOnBegin: false,
         pollingInterval: 1000,
         onBlock: async block => {
