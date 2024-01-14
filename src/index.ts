@@ -81,6 +81,7 @@ const main = async () => {
     });
 
     client.watchBlocks({
+        emitOnBegin: false,
         pollingInterval: 1000,
         emitOnBegin: false,
         onBlock: async block => {
