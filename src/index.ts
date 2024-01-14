@@ -80,9 +80,8 @@ const main = async () => {
     const client = createPublicClient({ chain, transport });
 
     client.watchBlocks({
-        emitMissed: true,
         emitOnBegin: false,
-        pollingInterval: 1000,
+        pollingInterval: 500,
         onBlock: async block => {
             if (!block)
                 return console.log(`Error while receiving block.`);
