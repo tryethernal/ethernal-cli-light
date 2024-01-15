@@ -79,22 +79,26 @@ const main = async () => {
 
     const client = createPublicClient({ chain, transport });
 
+    let firstBlock = false;
     client.watchBlocks({
-        emitOnBegin: false,
         pollingInterval: 500,
         onBlock: async block => {
-            if (!block)
-                return console.log(`Error while receiving block.`);
-            await queue.add(`blockSync-${workspaceId}-${block.number}`, {
-                userId: workspace.user.firebaseUserId,
-                workspace: workspace.name,
-                blockNumber: parseInt(block.number.toString()),
-                source: 'cli-light'
-            }, { priority: 1 });
-            console.log(`Synced block #${block.number}...`);
+            if (!firstBlock) firstBlock = true;
+            else {
+                if (!block)
+                    return console.log(`Error while receiving block.`);
+                await queue.add(`blockSync-${workspaceId}-${block.number}`, {
+                    userId: workspace.user.firebaseUserId,
+                    workspace: workspace.name,
+                    blockNumber: parseInt(block.number.toString()),
+                    source: 'cli-light'
+                }, { priority: 1 });
+                console.log(`Synced block #${block.number}...`);
+            }
         },
 
         onError: error => {
+            firstBlock = false;
             if (error && error.message)
                 console.log(`Could not connect to ${workspace.rpcServer}. Error: ${error.message}. Retrying...`);
             else
