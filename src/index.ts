@@ -75,7 +75,17 @@ const main = async () => {
         }
     });
 
-    const transport = workspace.rpcServer.startsWith('ws') ? webSocket() : http();
+    const fetchOptions = () => {
+        const rpcServer: URL = new URL(workspace.rpcServer);
+        if (rpcServer.username.length || rpcServer.password.length) {
+            const base64Credentials = btoa(`${rpcServer.username}:${rpcServer.password}`);
+            return { headers: { 'Authorization': `Basic ${base64Credentials}` }};
+        }
+        else
+            return {};
+    };
+
+    const transport = workspace.rpcServer.startsWith('ws') ? webSocket() : http(new URL(workspace.rpcServer).origin, { fetchOptions: fetchOptions() });
 
     const client = createPublicClient({ chain, transport });
 
