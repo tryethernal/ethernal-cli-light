@@ -15,6 +15,7 @@ if (!secret) {
 
 const args = process.argv.slice(2);
 const workspaceId = args[0];
+const pollingInterval = parseInt(args[1]) || 4000;
 
 if (!workspaceId) {
     console.log(`Pass the workspace id as an argument. Example: ethernal-cli-light 1`);
@@ -91,7 +92,7 @@ const main = async () => {
 
     let firstBlock = false;
     client.watchBlocks({
-        pollingInterval: 500,
+        pollingInterval,
         onBlock: async block => {
             if (!firstBlock) firstBlock = true;
             else {
