@@ -7,6 +7,7 @@ import Redis from 'ioredis';
 const secret = process.env.ETHERNAL_SECRET;
 const apiHost = process.env.ETHERNAL_HOST || 'http://localhost:8888';
 const redisUrl = process.env.ETHERNAL_REDIS_URL || 'redis://127.0.0.1:6379';
+const defaultPollingInterval = process.env.DEFAULT_POLLING_INTERVAL || 4000;
 
 if (!secret) {
     console.log(`Pass the secret with the ETHERNAL_SECRET env variable.`);
@@ -15,7 +16,6 @@ if (!secret) {
 
 const args = process.argv.slice(2);
 const workspaceId = args[0];
-const pollingInterval = parseInt(args[1]) || 4000;
 
 if (!workspaceId) {
     console.log(`Pass the workspace id as an argument. Example: ethernal-cli-light 1`);
@@ -91,6 +91,7 @@ const main = async () => {
     const client = createPublicClient({ chain, transport });
 
     let firstBlock = false;
+    const pollingInterval = parseInt(workspace.pollingInterval || defaultPollingInterval);
     client.watchBlocks({
         pollingInterval,
         onBlock: async block => {
