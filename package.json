@@ -1,6 +1,6 @@
 {
   "name": "ethernal-light",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Light version of Ethernal CLI that connects directly to the queuing backend",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
