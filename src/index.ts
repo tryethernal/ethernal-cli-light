@@ -90,10 +90,11 @@ const main = async () => {
 
     const client = createPublicClient({ chain, transport });
 
-    let firstBlock = false;
+    let firstBlock = !workspace.skipFirstBlock;
     const pollingInterval = parseInt(workspace.pollingInterval || defaultPollingInterval);
     client.watchBlocks({
         pollingInterval,
+        emitMissed: !!workspace.emitMissedBlocks,
         onBlock: async block => {
             if (!firstBlock) firstBlock = true;
             else {
@@ -110,7 +111,8 @@ const main = async () => {
         },
 
         onError: error => {
-            firstBlock = false;
+            if (workspace.skipFirstBlock)
+                firstBlock = false;
             if (error && error.message)
                 console.log(`Could not connect to ${workspace.rpcServer}. Error: ${error.message}. Retrying...`);
             else
