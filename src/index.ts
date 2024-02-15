@@ -86,7 +86,7 @@ const main = async () => {
             return {};
     };
 
-    const transport = workspace.rpcServer.startsWith('ws') ? webSocket() : http(new URL(workspace.rpcServer).origin, { fetchOptions: fetchOptions() });
+    const transport = workspace.rpcServer.startsWith('ws') ? webSocket() : http(new URL(workspace.rpcServer).origin + new URL(workspace.rpcServer).pathname, { fetchOptions: fetchOptions() });
 
     const client = createPublicClient({ chain, transport });
 
